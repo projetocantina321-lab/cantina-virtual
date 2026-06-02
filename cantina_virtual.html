@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cantina Virtual — C.E Mário Braga</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1a6e3a;--green-light:#e8f5ee;--green-mid:#2e9e58;--green-dark:#0f4a27;
+  --gold:#c8a04a;--gold-light:#fdf6e3;--gold-dark:#8a6a1e;
+  --text:#1a1a1a;--text2:#4a4a4a;--text3:#888;
+  --bg:#f8f9f4;--surface:#fff;--border:#e0e8df;
+  --danger:#c0392b;--danger-bg:#fdf0ef;
+  --info:#1565c0;--info-bg:#e8f0fe;
+  --warning:#b45309;--warning-bg:#fef3c7;
+  --radius:12px;--shadow:0 2px 12px rgba(0,0,0,.08);--shadow-md:0 4px 24px rgba(0,0,0,.12);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.header{background:linear-gradient(135deg,#0f4a27 0%,#1a6e3a 60%,#1f8248 100%);position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.25)}
+.header-inner{max-width:1280px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo-area{display:flex;align-items:center;gap:14px}
+.logo-icon{width:52px;height:52px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;font-family:'Sora',sans-serif;flex-shrink:0}
+.logo-text{color:#fff}
+.logo-text h1{font-family:'Sora',sans-serif;font-size:15px;font-weight:700;line-height:1.2}
+.logo-text p{font-size:11px;opacity:.8}
+.header-user{display:flex;align-items:center;gap:10px;color:#fff}
+.user-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500}
+.btn-logout{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:13px;font-family:inherit;transition:.2s}
+.btn-logout:hover{background:rgba(255,255,255,.25)}
+.nav{background:#0f4a27;border-bottom:1px solid rgba(255,255,255,.1)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;gap:2px;overflow-x:auto}
+.nav-item{color:rgba(255,255,255,.7);padding:11px 18px;font-size:13px;font-weight:500;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:.2s;font-family:inherit;background:none;border-top:none;border-left:none;border-right:none}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.05)}
+.nav-item.active{color:#c8a04a;border-bottom-color:#c8a04a}
+.page{display:none;max-width:1280px;margin:0 auto;padding:32px 24px}
+.page.active{display:block}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f4a27 0%,#1a6e3a 50%,#2aaa5f 100%);padding:24px}
+.login-card{background:#fff;border-radius:20px;padding:48px 44px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.login-logo{text-align:center;margin-bottom:32px}
+.login-logo .icon{width:72px;height:72px;background:linear-gradient(135deg,#1a6e3a,#2e9e58);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:30px}
+.login-logo h2{font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:#0f4a27}
+.login-logo p{font-size:13px;color:var(--text3);margin-top:4px}
+.role-tabs{display:flex;gap:6px;margin-bottom:28px;background:var(--bg);padding:5px;border-radius:10px}
+.role-tab{flex:1;padding:8px;border:none;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;transition:.2s;font-family:inherit;color:var(--text3);background:transparent}
+.role-tab.active{background:#fff;color:#0f4a27;box-shadow:0 1px 6px rgba(0,0,0,.12)}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:13px;font-weight:500;margin-bottom:6px;color:var(--text2)}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:inherit;transition:.2s;background:#fff;color:var(--text);outline:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(26,110,58,.1)}
+.btn-primary{width:100%;padding:13px;background:linear-gradient(135deg,var(--green),var(--green-mid));color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(26,110,58,.4)}
+.login-footer{text-align:center;margin-top:20px;font-size:13px;color:var(--text3)}
+.page-title{font-family:'Sora',sans-serif;font-size:26px;font-weight:700;color:#0f4a27;margin-bottom:6px}
+.page-sub{font-size:14px;color:var(--text3);margin-bottom:28px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--green-mid))}
+.stat-card.gold::before{background:linear-gradient(90deg,var(--gold-dark),var(--gold))}
+.stat-card.red::before{background:linear-gradient(90deg,#c0392b,#e74c3c)}
+.stat-card.blue::before{background:linear-gradient(90deg,#1565c0,#1976d2)}
+.stat-icon{font-size:28px;margin-bottom:10px}
+.stat-val{font-family:'Sora',sans-serif;font-size:28px;font-weight:700;color:#0f4a27;line-height:1}
+.stat-card.gold .stat-val{color:var(--gold-dark)}
+.stat-card.red .stat-val{color:var(--danger)}
+.stat-card.blue .stat-val{color:var(--info)}
+.stat-label{font-size:12px;color:var(--text3);margin-top:4px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-title{font-family:'Sora',sans-serif;font-size:16px;font-weight:600;color:#0f4a27;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:var(--green-light);color:#0f4a27;font-weight:600;padding:12px 16px;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+td{padding:12px 16px;border-top:1px solid var(--border);vertical-align:middle;color:var(--text2)}
+tr:hover td{background:#f9fdf9}
+.badge-status{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;display:inline-block}
+.badge-status.pendente{background:#fef3c7;color:#b45309}
+.badge-status.confirmado{background:#e8f5ee;color:#1a6e3a}
+.badge-status.cancelado{background:#fdf0ef;color:#c0392b}
+.badge-status.entregue{background:#e8f0fe;color:#1565c0}
+.badge-status.aprovado{background:#e8f5ee;color:#1a6e3a}
+.badge-status.recusado{background:#fdf0ef;color:#c0392b}
+.btn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;transition:.2s;font-family:inherit;border:1px solid transparent;display:inline-flex;align-items:center;gap:6px}
+.btn-sm{padding:5px 12px;font-size:12px;border-radius:6px}
+.btn-green{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-green:hover{background:#0f4a27}
+.btn-outline{background:transparent;color:var(--green);border-color:var(--green)}
+.btn-outline:hover{background:var(--green-light)}
+.btn-danger{background:var(--danger);color:#fff;border-color:var(--danger)}
+.btn-gold{background:var(--gold);color:#fff;border-color:var(--gold)}
+.btn-gold:hover{background:var(--gold-dark)}
+.search-bar{display:flex;gap:10px;margin-bottom:18px;align-items:center;flex-wrap:wrap}
+.search-input{flex:1;min-width:200px;padding:10px 16px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:inherit;outline:none;transition:.2s;background:#fff}
+.search-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(26,110,58,.1)}
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:24px}
+.item-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;transition:.2s;position:relative}
+.item-card:hover{border-color:var(--green-mid);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.item-card.no-stock{opacity:.55}
+.item-emoji{font-size:40px;margin-bottom:10px;display:block}
+.item-name{font-weight:600;font-size:14px;color:var(--text);margin-bottom:4px}
+.item-price{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:var(--green)}
+.item-qty{font-size:11px;color:var(--text3);margin-top:4px}
+.item-badge{position:absolute;top:8px;right:8px;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600}
+.cart-wrap{background:#fdf6e3;border:1.5px solid var(--gold);border-radius:var(--radius);padding:20px;margin-bottom:24px}
+.cart-item-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(200,160,74,.2);gap:8px}
+.cart-total{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-weight:700;font-size:16px}
+.credits-bar{background:var(--green-light);border:1.5px solid var(--green);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.credits-val{font-family:'Sora',sans-serif;font-size:24px;font-weight:700;color:#0f4a27}
+.qty-ctrl{display:flex;align-items:center;gap:8px}
+.qty-btn{width:28px;height:28px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;line-height:1}
+.qty-btn:hover{background:var(--green-light);border-color:var(--green)}
+.qty-num{font-weight:600;font-size:14px;min-width:20px;text-align:center}
+.alert{padding:12px 18px;border-radius:9px;font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.alert-success{background:#e8f5ee;color:#0f4a27;border:1px solid #b8dfc7}
+.alert-error{background:var(--danger-bg);color:var(--danger);border:1px solid #f5b5b0}
+.alert-info{background:var(--info-bg);color:var(--info);border:1px solid #a8c7f7}
+.alert-warning{background:var(--warning-bg);color:var(--warning);border:1px solid #fcd88a}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:18px;padding:36px;max-width:500px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25);position:relative;max-height:90vh;overflow-y:auto}
+.modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border:none;background:var(--bg);border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--text3);line-height:1}
+.modal-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:#0f4a27;margin-bottom:20px}
+.tab-list{display:flex;gap:4px;margin-bottom:24px;background:var(--bg);padding:4px;border-radius:10px;width:fit-content;flex-wrap:wrap}
+.tab{padding:8px 20px;border:none;background:transparent;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;transition:.2s;font-family:inherit;color:var(--text3)}
+.tab.active{background:#fff;color:#0f4a27;box-shadow:0 1px 6px rgba(0,0,0,.1)}
+.empty{text-align:center;padding:48px 24px;color:var(--text3)}
+.empty .icon{font-size:48px;margin-bottom:12px}
+.pagination{display:flex;gap:6px;align-items:center;margin-top:16px;justify-content:flex-end;flex-wrap:wrap}
+.pg-btn{padding:6px 12px;border:1px solid var(--border);border-radius:7px;background:#fff;font-size:13px;cursor:pointer;transition:.2s;font-family:inherit}
+.pg-btn.active{background:var(--green);color:#fff;border-color:var(--green)}
+.pg-btn:hover:not(.active){background:var(--green-light)}
+.notif{position:fixed;bottom:24px;right:24px;background:#0f4a27;color:#fff;padding:14px 22px;border-radius:12px;font-size:14px;font-weight:500;box-shadow:var(--shadow-md);transform:translateY(100px);transition:.35s;z-index:999}
+.notif.show{transform:translateY(0)}
+.notif.error{background:var(--danger)}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--green-light);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#0f4a27;flex-shrink:0}
+.credit-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:8px}
+.credit-row:last-child{border-bottom:none}
+.credit-plus{color:var(--green);font-weight:600}
+.credit-minus{color:var(--danger);font-weight:600}
+.welcome-band{background:linear-gradient(135deg,#0f4a27,#1a6e3a);border-radius:var(--radius);padding:28px 32px;margin-bottom:28px;color:#fff;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.welcome-band h2{font-family:'Sora',sans-serif;font-size:20px;font-weight:700}
+.welcome-band p{font-size:14px;opacity:.8;margin-top:4px}
+.welcome-credits .val{font-family:'Sora',sans-serif;font-size:32px;font-weight:800;color:#c8a04a}
+.welcome-credits .label{font-size:12px;opacity:.75;text-align:right}
+.chat-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.chat-messages{height:360px;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+.chat-msg{max-width:75%;padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.5;word-break:break-word}
+.chat-msg.bot{background:var(--green-light);color:#0f4a27;border-bottom-left-radius:4px;align-self:flex-start}
+.chat-msg.user{background:var(--green);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.chat-input-area{display:flex;gap:10px;padding:16px;border-top:1px solid var(--border);background:#fafafa}
+.chat-input{flex:1;padding:11px 16px;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:14px;outline:none;resize:none;height:48px;transition:.2s}
+.chat-input:focus{border-color:var(--green)}
+.api-key-area{background:var(--info-bg);border:1px solid rgba(21,101,192,.2);border-radius:10px;padding:16px;margin-bottom:16px}
+.api-key-row{display:flex;gap:10px;align-items:center;margin-top:8px}
+.api-key-row input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:monospace;outline:none;background:#fff}
+.register-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.register-grid{grid-template-columns:1fr}.login-card{padding:32px 24px}}
+select.filter-sel{padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:14px;outline:none;background:#fff}
+</style>
+</head>
+<body>
+
+<div id="loginPage">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="icon">🍽️</div>
+        <h2>Cantina Virtual</h2>
+        <p>Colégio Estadual Prof. Mário Brandão<br>Teixeira Braga — C.E Mário Braga</p>
+      </div>
+      <div class="role-tabs">
+        <button class="role-tab active" onclick="setRole('aluno')">🎒 Aluno</button>
+        <button class="role-tab" onclick="setRole('responsavel')">👨‍👩‍👧 Responsável</button>
+        <button class="role-tab" onclick="setRole('coordenador')">🏫 Coordenador</button>
+      </div>
+      <div class="form-group">
+        <label>Matrícula / Usuário</label>
+        <input type="text" id="loginUser" placeholder="Digite seu usuário" onkeyup="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="loginPass" placeholder="Digite sua senha" onkeyup="if(event.key==='Enter')doLogin()">
+      </div>
+      <div id="loginError" style="display:none" class="alert alert-error">Usuário ou senha incorretos.</div>
+      <button class="btn-primary" onclick="doLogin()">Entrar</button>
+      <div class="login-footer">Aluno: <b>joao / 1234</b> &nbsp;|&nbsp; Coordenador: <b>admin / admin123</b></div>
+    </div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="header">
+    <div class="header-inner">
+      <div class="logo-area">
+        <div class="logo-icon">CV</div>
+        <div class="logo-text">
+          <h1>Cantina Virtual</h1>
+          <p>C.E Prof. Mário Brandão Teixeira Braga</p>
+        </div>
+      </div>
+      <div class="header-user">
+        <span class="user-badge" id="userBadge"></span>
+        <button class="btn-logout" onclick="logout()">Sair</button>
+      </div>
+    </div>
+  </div>
+  <nav class="nav"><div class="nav-inner" id="navBar"></div></nav>
+  <div id="pageHome"      class="page active"></div>
+  <div id="pageCardapio"  class="page"></div>
+  <div id="pagePedidos"   class="page"></div>
+  <div id="pageAlunos"    class="page"></div>
+  <div id="pageCreditos"  class="page"></div>
+  <div id="pageSuporte"   class="page"></div>
+  <div id="pageRegistrar" class="page"></div>
+</div>
+
+<div class="modal-overlay" id="mainModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+<div class="notif" id="notif"></div>
+
+<script>
+// ══ DADOS ══
+var currentUser = null, currentRole = 'aluno', loginRole = 'aluno', apiKey = '';
+var cart = {}, chatHistory = [], alunoPage = 1, alunoPageSize = 8;
+
+var MENU = [
+  {id:1,  name:'Coxinha',           price:6.00,  emoji:'🍗', cat:'salgado', stock:30},
+  {id:2,  name:'Pastel',            price:7.50,  emoji:'🥟', cat:'salgado', stock:28},
+  {id:3,  name:'Pao de Queijo',     price:4.00,  emoji:'🧀', cat:'salgado', stock:40},
+  {id:4,  name:'Espetinho',         price:5.50,  emoji:'🍢', cat:'salgado', stock:35},
+  {id:5,  name:'Croquete',          price:5.00,  emoji:'🫓', cat:'salgado', stock:25},
+  {id:6,  name:'Enroladinho',       price:4.50,  emoji:'🌮', cat:'salgado', stock:30},
+  {id:7,  name:'Suco Gaseificado',  price:6.50,  emoji:'🥤', cat:'bebida',  stock:20},
+  {id:8,  name:'Suco Natural',      price:7.00,  emoji:'🍊', cat:'bebida',  stock:25},
+  {id:9,  name:'Agua Mineral',      price:3.00,  emoji:'💧', cat:'bebida',  stock:60},
+  {id:10, name:'Achocolatado',      price:4.00,  emoji:'🍫', cat:'bebida',  stock:45},
+  {id:11, name:'Refrigerante Lata', price:5.00,  emoji:'🥫', cat:'bebida',  stock:30},
+  {id:12, name:'Vitamina de Frutas',price:7.50,  emoji:'🍓', cat:'bebida',  stock:18},
+  {id:13, name:'Bala',              price:0.15,  emoji:'🍬', cat:'doce',    stock:200},
+  {id:14, name:'Biscoito',          price:1.50,  emoji:'🍪', cat:'doce',    stock:80},
+  {id:15, name:'Iogurte',           price:4.50,  emoji:'🍦', cat:'doce',    stock:22},
+  {id:16, name:'Brigadeiro',        price:2.50,  emoji:'🍫', cat:'doce',    stock:40},
+  {id:17, name:'Chiclete',          price:0.50,  emoji:'🫧', cat:'doce',    stock:100},
+  {id:18, name:'Salgadinho',        price:3.50,  emoji:'🍿', cat:'snack',   stock:50},
+  {id:19, name:'Amendoim',          price:2.00,  emoji:'🥜', cat:'snack',   stock:60},
+  {id:20, name:'Barra de Cereal',   price:3.00,  emoji:'🌾', cat:'snack',   stock:35},
+];
+
+var USERS = [
+  {id:1, name:'Joao Pedro Silva',    mat:'joao',  senha:'1234',     turma:'9A', role:'aluno',      cred:50.00, resp:'Maria Silva'},
+  {id:2, name:'Ana Luiza Ferreira',  mat:'ana',   senha:'1234',     turma:'8B', role:'aluno',      cred:35.50, resp:'Carlos Ferreira'},
+  {id:3, name:'Bruno Henrique Costa',mat:'bruno', senha:'1234',     turma:'7C', role:'aluno',      cred:20.00, resp:'Paula Costa'},
+  {id:4, name:'Carla Beatriz Souza', mat:'carla', senha:'1234',     turma:'9A', role:'aluno',      cred:75.00, resp:'Roberto Souza'},
+  {id:5, name:'Diego Mateus Lima',   mat:'diego', senha:'1234',     turma:'8B', role:'aluno',      cred:12.50, resp:'Fernanda Lima'},
+  {id:6, name:'Eduarda Gomes Nunes', mat:'edu',   senha:'1234',     turma:'6D', role:'aluno',      cred:88.00, resp:'Jose Nunes'},
+  {id:7, name:'Coordenador',         mat:'admin', senha:'admin123', turma:'',   role:'coordenador',cred:0},
+  {id:8, name:'Responsavel Demo',    mat:'resp1', senha:'resp123',  turma:'',   role:'responsavel',cred:0},
+];
+
+var ORDERS = [
+  {id:'P001',uid:1,aluno:'Joao Pedro Silva',   turma:'9A',items:[{n:'Coxinha',q:2,p:6.00},{n:'Suco Gaseificado',q:1,p:6.50}],total:18.50,status:'confirmado',date:'10/06/2025 10:32'},
+  {id:'P002',uid:2,aluno:'Ana Luiza Ferreira', turma:'8B',items:[{n:'Pastel',q:1,p:7.50},{n:'Agua Mineral',q:1,p:3.00}],total:10.50,status:'pendente',  date:'10/06/2025 10:45'},
+  {id:'P003',uid:3,aluno:'Bruno Henrique Costa',turma:'7C',items:[{n:'Bala',q:10,p:0.15},{n:'Salgadinho',q:2,p:3.50}],total:8.50,status:'pendente',   date:'10/06/2025 11:02'},
+  {id:'P004',uid:4,aluno:'Carla Beatriz Souza',turma:'9A',items:[{n:'Pao de Queijo',q:3,p:4.00},{n:'Achocolatado',q:1,p:4.00}],total:16.00,status:'entregue',  date:'09/06/2025 09:15'},
+  {id:'P005',uid:5,aluno:'Diego Mateus Lima',  turma:'8B',items:[{n:'Suco Natural',q:1,p:7.00}],total:7.00,status:'cancelado', date:'09/06/2025 10:30'},
+];
+
+var CREDIT_HIST = {
+  1:[{t:'add',v:50.00,desc:'Recarga do responsavel',date:'01/06/2025'},{t:'sub',v:18.50,desc:'Pedido P001',date:'10/06/2025'}],
+  2:[{t:'add',v:50.00,desc:'Recarga do responsavel',date:'01/06/2025'},{t:'sub',v:10.50,desc:'Pedido P002',date:'10/06/2025'}],
+};
+
+var CREDIT_REQS = [
+  {id:'CR001',uid:2,aluno:'Ana Luiza Ferreira',turma:'8B',val:30.00,motivo:'Recarga mensal',status:'pendente',date:'10/06/2025 09:00'},
+];
+
+// ══ LOGIN ══
+function setRole(r) {
+  loginRole = r;
+  document.querySelectorAll('.role-tab').forEach(function(t){ t.classList.remove('active'); });
+  var idx = {aluno:0,responsavel:1,coordenador:2}[r];
+  document.querySelectorAll('.role-tab')[idx].classList.add('active');
+}
+
+function doLogin() {
+  var u = document.getElementById('loginUser').value.trim();
+  var p = document.getElementById('loginPass').value.trim();
+  var found = null;
+  for (var i = 0; i < USERS.length; i++) {
+    if (USERS[i].mat === u && USERS[i].senha === p && USERS[i].role === loginRole) { found = USERS[i]; break; }
+  }
+  if (!found) { document.getElementById('loginError').style.display = 'flex'; return; }
+  document.getElementById('loginError').style.display = 'none';
+  currentUser = found;
+  currentRole = found.role;
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  var roleLabel = {aluno:'Aluno',responsavel:'Responsavel',coordenador:'Coordenador'}[found.role];
+  document.getElementById('userBadge').textContent = found.name + ' · ' + roleLabel;
+  buildNav();
+  navTo('home');
+}
+
+function logout() {
+  currentUser = null; cart = {};
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+}
+
+// ══ NAV ══
+var NAV_CONFIG = {
+  aluno:      [{id:'home',icon:'🏠',label:'Inicio'},{id:'cardapio',icon:'🍽',label:'Cardapio'},{id:'pedidos',icon:'📋',label:'Meus Pedidos'},{id:'creditos',icon:'💰',label:'Meus Creditos'},{id:'suporte',icon:'💬',label:'Suporte'}],
+  responsavel:[{id:'home',icon:'🏠',label:'Inicio'},{id:'pedidos',icon:'📋',label:'Pedidos'},{id:'creditos',icon:'💰',label:'Creditos'},{id:'suporte',icon:'💬',label:'Suporte'}],
+  coordenador:[{id:'home',icon:'🏠',label:'Dashboard'},{id:'cardapio',icon:'🍽',label:'Cardapio'},{id:'pedidos',icon:'📋',label:'Pedidos'},{id:'alunos',icon:'👥',label:'Alunos'},{id:'creditos',icon:'💰',label:'Creditos'},{id:'registrar',icon:'➕',label:'Registrar Aluno'},{id:'suporte',icon:'💬',label:'Suporte'}]
+};
+
+function buildNav() {
+  var items = NAV_CONFIG[currentRole] || [];
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    html += '<button class="nav-item" id="nav-' + items[i].id + '" onclick="navTo(\'' + items[i].id + '\')">' + items[i].icon + ' ' + items[i].label + '</button>';
+  }
+  document.getElementById('navBar').innerHTML = html;
+}
+
+function navTo(page) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
+  var pageEl = document.getElementById('page' + page.charAt(0).toUpperCase() + page.slice(1));
+  if (pageEl) { pageEl.classList.add('active'); buildPage(page); }
+  var navEl = document.getElementById('nav-' + page);
+  if (navEl) navEl.classList.add('active');
+}
+
+function buildPage(id) {
+  if (id === 'home')      buildHome();
+  else if (id === 'cardapio')  buildCardapio();
+  else if (id === 'pedidos')   buildPedidos();
+  else if (id === 'alunos')    buildAlunos();
+  else if (id === 'creditos')  buildCreditos();
+  else if (id === 'suporte')   buildSuporte();
+  else if (id === 'registrar') buildRegistrar();
+}
+
+// ══ HELPERS ══
+function initials(name) {
+  var parts = name.split(' ');
+  return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+}
+
+function fmt(v) { return 'R$ ' + Number(v).toFixed(2); }
+
+function statusBadge(s) {
+  return '<span class="badge-status ' + s + '">' + s + '</span>';
+}
+
+function avatarDiv(name) {
+  return '<div style="display:flex;align-items:center;gap:8px"><div class="avatar">' + initials(name) + '</div>' + name + '</div>';
+}
+
+function now() { return new Date().toLocaleString('pt-BR'); }
+
+// ══ HOME ══
+function buildHome() {
+  var el = document.getElementById('pageHome');
+  var html = '';
+  if (currentRole === 'coordenador') {
+    var nAlunos = 0, nPend = 0, receita = 0;
+    for (var i = 0; i < USERS.length; i++) { if (USERS[i].role === 'aluno') nAlunos++; }
+    for (var i = 0; i < ORDERS.length; i++) {
+      if (ORDERS[i].status === 'pendente') nPend++;
+      if (ORDERS[i].status !== 'cancelado') receita += ORDERS[i].total;
+    }
+    var pendRows = '';
+    for (var i = 0; i < ORDERS.length; i++) {
+      if (ORDERS[i].status === 'pendente') {
+        var o = ORDERS[i];
+        pendRows += '<tr><td><b>' + o.id + '</b></td><td>' + avatarDiv(o.aluno) + '</td><td>' + o.turma + '</td><td>' + fmt(o.total) + '</td><td>' + o.date + '</td>';
+        pendRows += '<td><button class="btn btn-sm btn-green" onclick="confirmarPedido(\'' + o.id + '\')">Confirmar</button></td></tr>';
+      }
+    }
+    if (!pendRows) pendRows = '<tr><td colspan="6"><div class="empty"><div class="icon">🎉</div>Nenhum pedido pendente!</div></td></tr>';
+    html += '<div class="welcome-band"><div><h2>Bem-vindo(a), ' + currentUser.name + '!</h2><p>Painel de Coordenacao — C.E Prof. Mario Braga</p></div><div style="font-size:40px">🏫</div></div>';
+    html += '<div class="stats-grid">';
+    html += '<div class="stat-card"><div class="stat-icon">👥</div><div class="stat-val">' + nAlunos + '</div><div class="stat-label">Alunos cadastrados</div></div>';
+    html += '<div class="stat-card gold"><div class="stat-icon">📋</div><div class="stat-val">' + nPend + '</div><div class="stat-label">Pedidos pendentes</div></div>';
+    html += '<div class="stat-card blue"><div class="stat-icon">💵</div><div class="stat-val">' + fmt(receita) + '</div><div class="stat-label">Receita total</div></div>';
+    html += '<div class="stat-card red"><div class="stat-icon">🍽</div><div class="stat-val">' + ORDERS.length + '</div><div class="stat-label">Total de pedidos</div></div>';
+    html += '</div>';
+    html += '<div class="card"><div class="card-title">📋 Pedidos Pendentes</div><div class="table-wrap"><table>';
+    html += '<tr><th>Pedido</th><th>Aluno</th><th>Turma</th><th>Total</th><th>Data</th><th>Acao</th></tr>';
+    html += pendRows + '</table></div></div>';
+  } else if (currentRole === 'aluno') {
+    var myOrders = [], nPend = 0, nEntregue = 0;
+    for (var i = 0; i < ORDERS.length; i++) {
+      if (ORDERS[i].uid === currentUser.id) {
+        myOrders.push(ORDERS[i]);
+        if (ORDERS[i].status === 'pendente') nPend++;
+        if (ORDERS[i].status === 'entregue') nEntregue++;
+      }
+    }
+    var recentRows = '';
+    for (var i = 0; i < Math.min(3, myOrders.length); i++) {
+      var o = myOrders[i];
+      var itemNames = o.items.map(function(x){ return x.n; }).join(', ');
+      recentRows += '<tr><td><b>' + o.id + '</b></td><td style="font-size:12px">' + itemNames + '</td><td>' + fmt(o.total) + '</td><td>' + statusBadge(o.status) + '</td></tr>';
+    }
+    if (!recentRows) recentRows = '<tr><td colspan="4"><div class="empty"><div class="icon">🛒</div>Voce ainda nao fez pedidos.<br><br><button class="btn btn-green" onclick="navTo(\'cardapio\')">Ver Cardapio</button></div></td></tr>';
+    html += '<div class="welcome-band"><div><h2>Ola, ' + currentUser.name.split(' ')[0] + '! 👋</h2><p>Turma ' + currentUser.turma + ' — Bem-vindo(a) a Cantina Virtual</p></div>';
+    html += '<div class="welcome-credits"><div class="val">' + fmt(currentUser.cred) + '</div><div class="label">seus creditos</div></div></div>';
+    html += '<div class="stats-grid">';
+    html += '<div class="stat-card"><div class="stat-icon">📦</div><div class="stat-val">' + myOrders.length + '</div><div class="stat-label">Pedidos realizados</div></div>';
+    html += '<div class="stat-card gold"><div class="stat-icon">⏳</div><div class="stat-val">' + nPend + '</div><div class="stat-label">Pedidos pendentes</div></div>';
+    html += '<div class="stat-card blue"><div class="stat-icon">✅</div><div class="stat-val">' + nEntregue + '</div><div class="stat-label">Pedidos entregues</div></div>';
+    html += '</div>';
+    html += '<div class="card"><div class="card-title">📋 Ultimos Pedidos</div><div class="table-wrap"><table>';
+    html += '<tr><th>Pedido</th><th>Itens</th><th>Total</th><th>Status</th></tr>';
+    html += recentRows + '</table></div></div>';
+  } else {
+    var rows = '';
+    for (var i = 0; i < Math.min(5, ORDERS.length); i++) {
+      var o = ORDERS[i];
+      rows += '<tr><td><b>' + o.id + '</b></td><td>' + o.aluno + '</td><td>' + fmt(o.total) + '</td><td>' + statusBadge(o.status) + '</td><td>' + o.date + '</td></tr>';
+    }
+    html += '<div class="welcome-band"><div><h2>Ola, Responsavel! 👋</h2><p>Acompanhe os pedidos e creditos</p></div><div style="font-size:40px">👨‍👩‍👧</div></div>';
+    html += '<div class="card"><div class="card-title">📋 Pedidos Recentes</div><div class="table-wrap"><table>';
+    html += '<tr><th>Pedido</th><th>Aluno</th><th>Total</th><th>Status</th><th>Data</th></tr>';
+    html += rows + '</table></div></div>';
+  }
+  el.innerHTML = html;
+}
+
+// ══ CARDAPIO ══
+var currentCat = 'todos';
+function buildCardapio() {
+  var el = document.getElementById('pageCardapio');
+  var isAdmin = currentRole === 'coordenador';
+  var html = '<div class="page-title">🍽 Cardapio</div>';
+  html += '<div class="page-sub">Escolha seus itens favoritos</div>';
+  if (!isAdmin) {
+    html += '<div class="credits-bar"><div><div style="font-size:12px;color:var(--text3);margin-bottom:2px">Seus Creditos</div><div class="credits-val">' + fmt(currentUser.cred) + '</div></div><button class="btn btn-outline" onclick="navTo(\'creditos\')">Ver extrato</button></div>';
+  }
+  // cart
+  var cartKeys = Object.keys(cart);
+  if (!isAdmin && cartKeys.length > 0) {
+    var cartTotal = 0;
+    var cartRows = '';
+    for (var i = 0; i < cartKeys.length; i++) {
+      var c = cart[cartKeys[i]];
+      cartTotal += c.price * c.qty;
+      cartRows += '<div class="cart-item-row"><span>' + c.emoji + ' ' + c.name + '</span>';
+      cartRows += '<div class="qty-ctrl"><button class="qty-btn" onclick="changeCart(' + c.id + ',-1)">−</button>';
+      cartRows += '<span class="qty-num">' + c.qty + '</span>';
+      cartRows += '<button class="qty-btn" onclick="changeCart(' + c.id + ',1)">+</button>';
+      cartRows += '<span style="min-width:70px;text-align:right;font-weight:600">' + fmt(c.price * c.qty) + '</span></div></div>';
+    }
+    html += '<div class="cart-wrap"><div class="card-title" style="margin-bottom:12px">🛒 Carrinho</div>';
+    html += cartRows;
+    html += '<div class="cart-total"><span>Total</span><span style="color:var(--green)">' + fmt(cartTotal) + '</span></div>';
+    html += '<div style="margin-top:14px;display:flex;gap:10px"><button class="btn btn-green" onclick="finalizarPedido()">✔ Finalizar Pedido</button><button class="btn btn-outline" onclick="cart={};buildCardapio()">Limpar</button></div></div>';
+  }
+  // tabs
+  html += '<div class="tab-list">';
+  var cats = ['todos','salgado','bebida','doce','snack'];
+  var catLabels = {todos:'Todos',salgado:'🍗 Salgados',bebida:'🥤 Bebidas',doce:'🍬 Doces',snack:'🍿 Snacks'};
+  for (var i = 0; i < cats.length; i++) {
+    html += '<button class="tab ' + (currentCat === cats[i] ? 'active' : '') + '" onclick="filterCat(\'' + cats[i] + '\')">' + catLabels[cats[i]] + '</button>';
+  }
+  html += '</div><div class="items-grid">';
+  for (var i = 0; i < MENU.length; i++) {
+    var item = MENU[i];
+    if (currentCat !== 'todos' && item.cat !== currentCat) continue;
+    var inCart = cart[item.id] ? cart[item.id].qty : 0;
+    var noStock = item.stock === 0;
+    html += '<div class="item-card' + (noStock ? ' no-stock' : '') + '">';
+    if (noStock) html += '<span class="item-badge" style="background:#fdf0ef;color:#c0392b">Esgotado</span>';
+    else if (item.stock < 10) html += '<span class="item-badge" style="background:#fef3c7;color:#b45309">Ultimas!</span>';
+    else if (inCart > 0) html += '<span class="item-badge" style="background:var(--green-light);color:var(--green)">' + inCart + ' no carrinho</span>';
+    html += '<span class="item-emoji">' + item.emoji + '</span>';
+    html += '<div class="item-name">' + item.name + '</div>';
+    html += '<div class="item-price">' + fmt(item.price) + '</div>';
+    html += '<div class="item-qty">Estoque: ' + item.stock + ' un</div>';
+    if (!isAdmin && !noStock) {
+      html += '<button class="btn btn-sm btn-green" style="margin-top:10px" onclick="addToCart(' + item.id + ')">+ Adicionar</button>';
+    }
+    if (isAdmin) {
+      html += '<button class="btn btn-sm btn-outline" style="margin-top:10px" onclick="editItem(' + item.id + ')">Editar</button>';
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function filterCat(cat) { currentCat = cat; buildCardapio(); }
+
+function addToCart(id) {
+  var item = null;
+  for (var i = 0; i < MENU.length; i++) { if (MENU[i].id === id) { item = MENU[i]; break; } }
+  if (!item || item.stock === 0) return;
+  if (cart[id]) cart[id].qty++;
+  else cart[id] = {id:item.id, name:item.name, emoji:item.emoji, price:item.price, qty:1};
+  showNotif(item.emoji + ' ' + item.name + ' adicionado!');
+  buildCardapio();
+}
+
+function changeCart(id, delta) {
+  if (!cart[id]) return;
+  cart[id].qty += delta;
+  if (cart[id].qty <= 0) delete cart[id];
+  buildCardapio();
+}
+
+function finalizarPedido() {
+  var total = 0;
+  for (var k in cart) total += cart[k].price * cart[k].qty;
+  if (currentUser.cred < total) { showNotif('Creditos insuficientes! Saldo: ' + fmt(currentUser.cred), true); return; }
+  var pid = 'P' + String(ORDERS.length + 1).padStart(3, '0');
+  var items = [];
+  for (var k in cart) items.push({n:cart[k].name, q:cart[k].qty, p:cart[k].price});
+  ORDERS.unshift({id:pid, uid:currentUser.id, aluno:currentUser.name, turma:currentUser.turma, items:items, total:total, status:'pendente', date:now()});
+  currentUser.cred -= total;
+  var u = userById(currentUser.id);
+  if (u) u.cred = currentUser.cred;
+  if (!CREDIT_HIST[currentUser.id]) CREDIT_HIST[currentUser.id] = [];
+  CREDIT_HIST[currentUser.id].unshift({t:'sub', v:total, desc:'Pedido #' + pid, date:new Date().toLocaleDateString('pt-BR')});
+  cart = {};
+  showNotif('✅ Pedido ' + pid + ' realizado!');
+  buildCardapio();
+}
+
+function editItem(id) {
+  var item = null;
+  for (var i = 0; i < MENU.length; i++) { if (MENU[i].id === id) { item = MENU[i]; break; } }
+  var html = '<div class="modal-title">Editar: ' + item.name + '</div>';
+  html += '<div class="form-group"><label>Nome</label><input type="text" id="ei-name" value="' + item.name + '"></div>';
+  html += '<div class="form-group"><label>Preco (R$)</label><input type="number" id="ei-price" step="0.01" value="' + item.price + '"></div>';
+  html += '<div class="form-group"><label>Estoque</label><input type="number" id="ei-stock" value="' + item.stock + '"></div>';
+  html += '<div class="form-group"><label>Emoji</label><input type="text" id="ei-emoji" value="' + item.emoji + '"></div>';
+  html += '<button class="btn btn-green" style="width:100%" onclick="saveItem(' + id + ')">Salvar</button>';
+  openModal(html);
+}
+
+function saveItem(id) {
+  for (var i = 0; i < MENU.length; i++) {
+    if (MENU[i].id === id) {
+      MENU[i].name  = document.getElementById('ei-name').value;
+      MENU[i].price = parseFloat(document.getElementById('ei-price').value);
+      MENU[i].stock = parseInt(document.getElementById('ei-stock').value);
+      MENU[i].emoji = document.getElementById('ei-emoji').value;
+      break;
+    }
+  }
+  closeModal(); buildCardapio(); showNotif('Item atualizado!');
+}
+
+// ══ PEDIDOS ══
+function buildPedidos() {
+  var el = document.getElementById('pagePedidos');
+  var html = '<div class="page-title">📋 ' + (currentRole === 'aluno' ? 'Meus Pedidos' : 'Registro de Pedidos') + '</div>';
+  html += '<div class="page-sub">' + (currentRole === 'aluno' ? 'Historico dos seus pedidos' : 'Todos os pedidos dos alunos') + ' &nbsp;·&nbsp; <span style="font-size:12px;color:var(--text3)">Atualizado em: ' + now() + '</span></div>';
+  html += '<div class="search-bar">';
+  html += '<input class="search-input" id="pedSearch" placeholder="Pesquisar pedido, aluno, status..." oninput="filterPedidos()">';
+  html += '<select class="filter-sel" id="pedStatus" onchange="filterPedidos()"><option value="">Todos os status</option><option value="pendente">⏳ Pendente</option><option value="confirmado">✅ Confirmado</option><option value="entregue">📦 Entregue</option><option value="cancelado">❌ Cancelado</option></select>';
+  html += '</div>';
+  html += '<div class="card"><div class="table-wrap"><table id="pedTable"></table></div></div>';
+  el.innerHTML = html;
+  renderPedidosTable(getFilteredOrders());
+}
+
+function getFilteredOrders() {
+  var q = '';
+  var s = '';
+  var searchEl = document.getElementById('pedSearch');
+  var statusEl = document.getElementById('pedStatus');
+  if (searchEl) q = searchEl.value.toLowerCase();
+  if (statusEl) s = statusEl.value;
+  var list = [];
+  for (var i = 0; i < ORDERS.length; i++) {
+    var o = ORDERS[i];
+    if (currentRole === 'aluno' && o.uid !== currentUser.id) continue;
+    if (q && (o.aluno + o.id + o.status + o.turma).toLowerCase().indexOf(q) < 0) continue;
+    if (s && o.status !== s) continue;
+    list.push(o);
+  }
+  return list;
+}
+
+function filterPedidos() { renderPedidosTable(getFilteredOrders()); }
+
+function renderPedidosTable(orders) {
+  var tbl = document.getElementById('pedTable');
+  if (!tbl) return;
+  var isCoord = currentRole === 'coordenador';
+  var isAluno = currentRole === 'aluno';
+  var html = '<tr><th>Pedido</th>';
+  if (!isAluno) html += '<th>Aluno</th><th>Turma</th>';
+  html += '<th>Itens</th><th>Total</th><th>Status</th><th>Data</th>';
+  if (isCoord) html += '<th>Acoes</th>';
+  html += '</tr>';
+  if (orders.length === 0) {
+    var cols = isAluno ? 5 : (isCoord ? 8 : 6);
+    html += '<tr><td colspan="' + cols + '"><div class="empty"><div class="icon">📭</div><p>Nenhum pedido encontrado.</p><br><span style="font-size:12px;color:var(--text3)">Consulta em: ' + now() + '</span></div></td></tr>';
+  } else {
+    for (var i = 0; i < orders.length; i++) {
+      var o = orders[i];
+      var itemStr = o.items.map(function(x){ return x.q + 'x ' + x.n; }).join(', ');
+      html += '<tr><td><b>' + o.id + '</b></td>';
+      if (!isAluno) html += '<td>' + avatarDiv(o.aluno) + '</td><td>' + o.turma + '</td>';
+      html += '<td style="font-size:12px;max-width:200px">' + itemStr + '</td>';
+      html += '<td>' + fmt(o.total) + '</td>';
+      html += '<td>' + statusBadge(o.status) + '</td>';
+      html += '<td>' + o.date + '</td>';
+      if (isCoord) {
+        html += '<td><div style="display:flex;gap:4px;flex-wrap:wrap">';
+        if (o.status === 'pendente')   html += '<button class="btn btn-sm btn-green" onclick="updateOrder(\'' + o.id + '\',\'confirmado\')">✔ Confirmar</button>';
+        if (o.status === 'confirmado') html += '<button class="btn btn-sm btn-gold" onclick="updateOrder(\'' + o.id + '\',\'entregue\')">📦 Entregar</button>';
+        if (o.status !== 'cancelado' && o.status !== 'entregue') html += '<button class="btn btn-sm btn-danger" onclick="updateOrder(\'' + o.id + '\',\'cancelado\')">✕ Cancelar</button>';
+        html += '<button class="btn btn-sm btn-outline" onclick="viewOrder(\'' + o.id + '\')">Ver</button>';
+        html += '</div></td>';
+      }
+      html += '</tr>';
+    }
+  }
+  tbl.innerHTML = html;
+}
+
+function updateOrder(id, status) {
+  for (var i = 0; i < ORDERS.length; i++) {
+    if (ORDERS[i].id === id) { ORDERS[i].status = status; break; }
+  }
+  renderPedidosTable(getFilteredOrders());
+  showNotif('Pedido ' + id + ' atualizado para: ' + status);
+}
+
+function confirmarPedido(id) { updateOrder(id, 'confirmado'); buildHome(); }
+
+function viewOrder(id) {
+  var o = null;
+  for (var i = 0; i < ORDERS.length; i++) { if (ORDERS[i].id === id) { o = ORDERS[i]; break; } }
+  var html = '<div class="modal-title">📋 Pedido ' + o.id + '</div>';
+  html += '<div class="alert alert-info">Aluno: <b>' + o.aluno + '</b> — Turma <b>' + o.turma + '</b></div>';
+  html += '<table style="width:100%;font-size:14px;margin-bottom:16px"><tr style="background:var(--green-light)"><th style="padding:8px 10px;text-align:left">Item</th><th style="padding:8px 10px;text-align:right">Qtd</th><th style="padding:8px 10px;text-align:right">Subtotal</th></tr>';
+  for (var i = 0; i < o.items.length; i++) {
+    var it = o.items[i];
+    html += '<tr><td style="padding:8px 10px">' + it.n + '</td><td style="padding:8px 10px;text-align:right">' + it.q + '</td><td style="padding:8px 10px;text-align:right">' + fmt(it.p * it.q) + '</td></tr>';
+  }
+  html += '<tr style="font-weight:700"><td colspan="2" style="padding:10px">Total</td><td style="padding:10px;text-align:right;color:var(--green)">' + fmt(o.total) + '</td></tr></table>';
+  html += '<div><b>Status:</b> ' + statusBadge(o.status) + '</div>';
+  html += '<div style="margin-top:8px"><b>Data:</b> ' + o.date + '</div>';
+  openModal(html);
+}
+
+// ══ ALUNOS ══
+function buildAlunos() {
+  var el = document.getElementById('pageAlunos');
+  var html = '<div class="page-title">👥 Alunos Cadastrados</div>';
+  html += '<div class="page-sub">Lista em ordem alfabetica com busca</div>';
+  html += '<div class="search-bar"><input class="search-input" id="alunoSearch" placeholder="Pesquisar por nome, matricula, turma..." oninput="alunoPage=1;renderAlunosTable()">';
+  html += '<button class="btn btn-green" onclick="navTo(\'registrar\')">+ Cadastrar Aluno</button></div>';
+  html += '<div class="card"><div class="table-wrap"><table id="alunosTable"></table></div><div class="pagination" id="alunoPag"></div></div>';
+  el.innerHTML = html;
+  renderAlunosTable();
+}
+
+function renderAlunosTable() {
+  var tbl = document.getElementById('alunosTable');
+  var pag = document.getElementById('alunoPag');
+  if (!tbl) return;
+  var q = '';
+  var searchEl = document.getElementById('alunoSearch');
+  if (searchEl) q = searchEl.value.toLowerCase();
+  var list = [];
+  for (var i = 0; i < USERS.length; i++) {
+    if (USERS[i].role !== 'aluno') continue;
+    var u = USERS[i];
+    if (q && (u.name + u.mat + (u.turma || '') + (u.resp || '')).toLowerCase().indexOf(q) < 0) continue;
+    list.push(u);
+  }
+  list.sort(function(a,b){ return a.name.localeCompare(b.name, 'pt-BR'); });
+  var total = list.length;
+  var pages = Math.ceil(total / alunoPageSize) || 1;
+  if (alunoPage > pages) alunoPage = 1;
+  var slice = list.slice((alunoPage-1)*alunoPageSize, alunoPage*alunoPageSize);
+  var html = '<tr><th>#</th><th>Aluno</th><th>Matricula</th><th>Turma</th><th>Responsavel</th><th>Creditos</th><th>Acoes</th></tr>';
+  if (slice.length === 0) {
+    html += '<tr><td colspan="7"><div class="empty"><div class="icon">🔍</div>Nenhum aluno encontrado.</div></td></tr>';
+  } else {
+    for (var i = 0; i < slice.length; i++) {
+      var u = slice[i];
+      var n = (alunoPage-1)*alunoPageSize + i + 1;
+      var credColor = u.cred > 10 ? 'var(--green)' : u.cred > 0 ? 'var(--warning)' : 'var(--danger)';
+      html += '<tr><td style="color:var(--text3)">' + n + '</td>';
+      html += '<td>' + avatarDiv(u.name) + '</td>';
+      html += '<td>' + u.mat + '</td>';
+      html += '<td><span style="background:var(--green-light);color:var(--green);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600">' + u.turma + '</span></td>';
+      html += '<td>' + (u.resp || '—') + '</td>';
+      html += '<td style="font-weight:600;color:' + credColor + '">' + fmt(u.cred) + '</td>';
+      html += '<td><button class="btn btn-sm btn-outline" onclick="verAluno(' + u.id + ')">Ver</button> ';
+      html += '<button class="btn btn-sm btn-gold" onclick="addCreditModal(' + u.id + ')">+ Credito</button></td></tr>';
+    }
+  }
+  tbl.innerHTML = html;
+  if (pag) {
+    var pagHtml = '';
+    if (pages > 1) {
+      for (var i = 1; i <= pages; i++) {
+        pagHtml += '<button class="pg-btn ' + (i === alunoPage ? 'active' : '') + '" onclick="alunoPage=' + i + ';renderAlunosTable()">' + i + '</button>';
+      }
+    }
+    pag.innerHTML = pagHtml;
+  }
+}
+
+function verAluno(id) {
+  var u = userById(id);
+  var pedidos = [], hist = CREDIT_HIST[id] || [];
+  for (var i = 0; i < ORDERS.length; i++) { if (ORDERS[i].uid === id) pedidos.push(ORDERS[i]); }
+  var html = '<div class="modal-title">👤 ' + u.name + '</div>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;font-size:14px">';
+  html += '<div><span style="color:var(--text3)">Matricula</span><br><b>' + u.mat + '</b></div>';
+  html += '<div><span style="color:var(--text3)">Turma</span><br><b>' + u.turma + '</b></div>';
+  html += '<div><span style="color:var(--text3)">Responsavel</span><br><b>' + (u.resp||'—') + '</b></div>';
+  html += '<div><span style="color:var(--text3)">Creditos</span><br><b style="color:var(--green);font-size:18px">' + fmt(u.cred) + '</b></div></div>';
+  html += '<div style="font-weight:600;margin-bottom:8px">Pedidos (' + pedidos.length + ')</div>';
+  if (pedidos.length === 0) {
+    html += '<p style="font-size:13px;color:var(--text3)">Nenhum pedido.</p>';
+  } else {
+    for (var i = 0; i < Math.min(3, pedidos.length); i++) {
+      var o = pedidos[i];
+      html += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span>' + o.id + ' — ' + o.date + '</span>' + statusBadge(o.status) + '</div>';
+    }
+  }
+  html += '<div style="margin-top:16px;font-weight:600;margin-bottom:8px">Extrato de Creditos</div>';
+  if (hist.length === 0) {
+    html += '<p style="font-size:13px;color:var(--text3)">Sem movimentacoes.</p>';
+  } else {
+    for (var i = 0; i < Math.min(4, hist.length); i++) {
+      var h = hist[i];
+      html += '<div class="credit-row"><div><div style="font-size:14px;font-weight:500">' + h.desc + '</div><div style="font-size:11px;color:var(--text3)">' + h.date + '</div></div>';
+      html += '<span class="' + (h.t==='add'?'credit-plus':'credit-minus') + '">' + (h.t==='add'?'+':'−') + fmt(h.v) + '</span></div>';
+    }
+  }
+  openModal(html);
+}
+
+function addCreditModal(id) {
+  var u = userById(id);
+  var html = '<div class="modal-title">💰 Adicionar Creditos — ' + u.name + '</div>';
+  html += '<div class="alert alert-info">Saldo atual: <b>' + fmt(u.cred) + '</b></div>';
+  html += '<div class="form-group"><label>Valor (R$)</label><input type="number" id="cred-val" step="0.01" min="0.01" placeholder="Ex: 50.00"></div>';
+  html += '<div class="form-group"><label>Descricao</label><input type="text" id="cred-desc" value="Credito adicionado pelo coordenador"></div>';
+  html += '<button class="btn btn-green" style="width:100%" onclick="confirmarCredito(' + id + ')">Confirmar</button>';
+  openModal(html);
+}
+
+function confirmarCredito(id) {
+  var val = parseFloat(document.getElementById('cred-val').value);
+  var desc = document.getElementById('cred-desc').value;
+  if (!val || val <= 0) { showNotif('Valor invalido!', true); return; }
+  var u = userById(id);
+  u.cred += val;
+  if (u.id === currentUser.id) currentUser.cred = u.cred;
+  if (!CREDIT_HIST[id]) CREDIT_HIST[id] = [];
+  CREDIT_HIST[id].unshift({t:'add', v:val, desc:desc, date:new Date().toLocaleDateString('pt-BR')});
+  closeModal(); renderAlunosTable(); showNotif('R$ ' + val.toFixed(2) + ' adicionados a ' + u.name);
+}
+
+// ══ CREDITOS ══
+function buildCreditos() {
+  var el = document.getElementById('pageCreditos');
+  var html = '';
+  if (currentRole === 'coordenador') {
+    var pendReqs = CREDIT_REQS.filter(function(r){ return r.status === 'pendente'; });
+    var alunos = USERS.filter(function(u){ return u.role === 'aluno'; }).sort(function(a,b){ return b.cred - a.cred; });
+    html += '<div class="page-title">💰 Gestao de Creditos</div>';
+    html += '<div class="page-sub">Aprovacao de recargas e saldo dos alunos</div>';
+    if (pendReqs.length > 0) {
+      html += '<div class="alert alert-warning">⚠️ <b>' + pendReqs.length + '</b> solicitacao(oes) de recarga aguardando aprovacao.</div>';
+    }
+    // solicitacoes pendentes
+    html += '<div class="card" style="margin-bottom:20px"><div class="card-title">🔄 Solicitacoes de Recarga Pendentes</div>';
+    if (pendReqs.length === 0) {
+      html += '<div class="empty" style="padding:20px"><div class="icon">✅</div>Nenhuma solicitacao pendente.</div>';
+    } else {
+      html += '<div class="table-wrap"><table><tr><th>Aluno</th><th>Turma</th><th>Valor</th><th>Motivo</th><th>Data</th><th>Acoes</th></tr>';
+      for (var i = 0; i < pendReqs.length; i++) {
+        var r = pendReqs[i];
+        html += '<tr><td>' + avatarDiv(r.aluno) + '</td><td>' + r.turma + '</td>';
+        html += '<td style="font-weight:700;color:var(--green)">' + fmt(r.val) + '</td>';
+        html += '<td style="font-size:12px;color:var(--text3)">' + (r.motivo||'—') + '</td>';
+        html += '<td>' + r.date + '</td>';
+        html += '<td><button class="btn btn-sm btn-green" onclick="aprovarRecarga(\'' + r.id + '\')">✔ Aprovar</button> ';
+        html += '<button class="btn btn-sm btn-danger" onclick="recusarRecarga(\'' + r.id + '\')">✕ Recusar</button></td></tr>';
+      }
+      html += '</table></div>';
+    }
+    html += '</div>';
+    // saldo alunos
+    html += '<div class="card"><div class="card-title">👥 Saldo dos Alunos</div><div class="table-wrap"><table>';
+    html += '<tr><th>Aluno</th><th>Turma</th><th>Saldo</th><th>Acao</th></tr>';
+    for (var i = 0; i < alunos.length; i++) {
+      var u = alunos[i];
+      var credColor = u.cred > 10 ? 'var(--green)' : u.cred > 0 ? 'var(--warning)' : 'var(--danger)';
+      html += '<tr><td>' + avatarDiv(u.name) + '</td><td>' + u.turma + '</td>';
+      html += '<td style="font-weight:700;font-size:16px;color:' + credColor + '">' + fmt(u.cred) + '</td>';
+      html += '<td><button class="btn btn-sm btn-gold" onclick="addCreditModal(' + u.id + ')">+ Adicionar</button></td></tr>';
+    }
+    html += '</table></div></div>';
+  } else {
+    // aluno ou responsavel
+    var uid = currentUser.id;
+    var hist = CREDIT_HIST[uid] || [];
+    var minhasReqs = CREDIT_REQS.filter(function(r){ return r.uid === uid; });
+    var nPend = minhasReqs.filter(function(r){ return r.status === 'pendente'; }).length;
+    html += '<div class="page-title">💰 Meus Creditos</div>';
+    html += '<div class="page-sub">Saldo, extrato e solicitacoes de recarga</div>';
+    html += '<div class="credits-bar">';
+    html += '<div><div style="font-size:12px;color:var(--text3);margin-bottom:2px">Saldo Disponivel</div><div class="credits-val">' + fmt(currentUser.cred) + '</div></div>';
+    html += '<button class="btn btn-gold" onclick="solicitarRecargaModal()">+ Solicitar Recarga</button></div>';
+    if (nPend > 0) {
+      html += '<div class="alert alert-warning">⏳ Voce tem <b>' + nPend + '</b> solicitacao(oes) aguardando aprovacao do coordenador.</div>';
+    }
+    // solicitacoes
+    html += '<div class="card" style="margin-bottom:20px"><div class="card-title">🔄 Minhas Solicitacoes</div>';
+    if (minhasReqs.length === 0) {
+      html += '<div class="empty" style="padding:20px"><div class="icon">📨</div>Nenhuma solicitacao feita.</div>';
+    } else {
+      for (var i = 0; i < minhasReqs.length; i++) {
+        var r = minhasReqs[i];
+        var sClass = r.status === 'pendente' ? 'pendente' : r.status === 'confirmado' ? 'confirmado' : 'cancelado';
+        var sLabel = r.status === 'pendente' ? '⏳ pendente' : r.status === 'confirmado' ? '✅ aprovado' : '❌ recusado';
+        html += '<div class="credit-row">';
+        html += '<div><div style="font-size:14px;font-weight:500">Solicitacao de ' + fmt(r.val) + '</div>';
+        html += '<div style="font-size:12px;color:var(--text3)">' + r.date + ' — ' + (r.motivo||'Recarga') + '</div></div>';
+        html += '<span class="badge-status ' + sClass + '">' + sLabel + '</span></div>';
+      }
+    }
+    html += '</div>';
+    // extrato
+    html += '<div class="card"><div class="card-title">📊 Extrato de Creditos</div>';
+    if (hist.length === 0) {
+      html += '<div class="empty"><div class="icon">📊</div>Sem movimentacoes.</div>';
+    } else {
+      for (var i = 0; i < hist.length; i++) {
+        var h = hist[i];
+        html += '<div class="credit-row"><div><div style="font-size:14px;font-weight:500">' + h.desc + '</div>';
+        html += '<div style="font-size:12px;color:var(--text3)">' + h.date + '</div></div>';
+        html += '<span class="' + (h.t==='add'?'credit-plus':'credit-minus') + '" style="font-size:16px">' + (h.t==='add'?'+':'−') + fmt(h.v) + '</span></div>';
+      }
+    }
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function solicitarRecargaModal() {
+  var html = '<div class="modal-title">💰 Solicitar Recarga de Creditos</div>';
+  html += '<div class="alert alert-info">Saldo atual: <b>' + fmt(currentUser.cred) + '</b><br>Sua solicitacao sera enviada ao coordenador para aprovacao.</div>';
+  html += '<div class="form-group"><label>Valor desejado (R$)</label><input type="number" id="req-val" step="0.01" min="1" placeholder="Ex: 50.00"></div>';
+  html += '<div class="form-group"><label>Motivo</label><input type="text" id="req-motivo" placeholder="Ex: Recarga semanal"></div>';
+  html += '<button class="btn btn-green" style="width:100%" onclick="enviarSolicitacao()">📨 Enviar Solicitacao</button>';
+  openModal(html);
+}
+
+function enviarSolicitacao() {
+  var val = parseFloat(document.getElementById('req-val').value);
+  var motivo = document.getElementById('req-motivo').value;
+  if (!val || val <= 0) { showNotif('Informe um valor valido!', true); return; }
+  var cid = 'CR' + String(CREDIT_REQS.length + 1).padStart(3, '0');
+  CREDIT_REQS.unshift({id:cid, uid:currentUser.id, aluno:currentUser.name, turma:currentUser.turma, val:val, motivo:motivo, status:'pendente', date:now()});
+  closeModal(); showNotif('✅ Solicitacao enviada! Aguarde aprovacao.'); buildCreditos();
+}
+
+function aprovarRecarga(rid) {
+  for (var i = 0; i < CREDIT_REQS.length; i++) {
+    if (CREDIT_REQS[i].id === rid) {
+      var r = CREDIT_REQS[i];
+      r.status = 'confirmado';
+      var u = userById(r.uid);
+      if (u) {
+        u.cred += r.val;
+        if (currentUser && currentUser.id === u.id) currentUser.cred = u.cred;
+        if (!CREDIT_HIST[u.id]) CREDIT_HIST[u.id] = [];
+        CREDIT_HIST[u.id].unshift({t:'add', v:r.val, desc:'Recarga aprovada (' + rid + ')', date:new Date().toLocaleDateString('pt-BR')});
+      }
+      showNotif('✅ Recarga de ' + fmt(r.val) + ' aprovada para ' + r.aluno);
+      break;
+    }
+  }
+  buildCreditos();
+}
+
+function recusarRecarga(rid) {
+  for (var i = 0; i < CREDIT_REQS.length; i++) {
+    if (CREDIT_REQS[i].id === rid) { CREDIT_REQS[i].status = 'cancelado'; break; }
+  }
+  showNotif('Solicitacao recusada.');
+  buildCreditos();
+}
+
+// ══ SUPORTE ══
+function buildSuporte() {
+  var el = document.getElementById('pageSuporte');
+  var html = '<div class="page-title">💬 Suporte com IA</div>';
+  html += '<div class="page-sub">Tire suas duvidas sobre a cantina, creditos e pedidos</div>';
+  html += '<div class="api-key-area"><div style="font-size:13px;font-weight:600;color:var(--info)">🔑 Chave da API (Claude)</div>';
+  html += '<div style="font-size:12px;color:var(--text3);margin-top:2px">Insira sua chave para ativar o suporte por IA. Ela fica salva apenas nesta sessao.</div>';
+  html += '<div class="api-key-row"><input type="password" id="apiKeyInput" placeholder="sk-ant-..." value="' + apiKey + '"><button class="btn btn-green" onclick="salvarApiKey()">Salvar</button></div></div>';
+  html += '<div class="chat-wrap"><div class="chat-messages" id="chatMessages">';
+  html += '<div class="chat-msg bot">👋 Ola! Sou o assistente da Cantina Virtual do C.E Mario Braga. Posso te ajudar com duvidas sobre pedidos, creditos, cardapio e muito mais. Como posso ajudar?</div></div>';
+  html += '<div class="chat-input-area"><textarea class="chat-input" id="chatInput" placeholder="Digite sua mensagem..." onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>';
+  html += '<button class="btn btn-green" onclick="sendChat()">Enviar</button></div></div>';
+  html += '<div style="margin-top:16px"><div style="font-size:12px;color:var(--text3);margin-bottom:8px">Perguntas frequentes:</div>';
+  html += '<div style="display:flex;gap:8px;flex-wrap:wrap">';
+  var faq = ['Como fazer um pedido?','Como verificar meus creditos?','Quais itens estao disponiveis?','Como cancelar um pedido?'];
+  for (var i = 0; i < faq.length; i++) {
+    html += '<button class="btn btn-outline btn-sm" onclick="quickChat(\'' + faq[i] + '\')">' + faq[i] + '</button>';
+  }
+  html += '</div></div>';
+  el.innerHTML = html;
+}
+
+function salvarApiKey() {
+  var inp = document.getElementById('apiKeyInput');
+  if (inp) { apiKey = inp.value.trim(); showNotif(apiKey ? '✅ Chave da API salva!' : 'Chave removida.'); }
+}
+
+function quickChat(msg) {
+  var inp = document.getElementById('chatInput');
+  if (inp) { inp.value = msg; sendChat(); }
+}
+
+async function sendChat() {
+  if (!apiKey) { showNotif('Configure a chave da API primeiro!', true); return; }
+  var inp = document.getElementById('chatInput');
+  var msgs = document.getElementById('chatMessages');
+  if (!inp || !msgs) return;
+  var msg = inp.value.trim();
+  if (!msg) return;
+  inp.value = '';
+  msgs.innerHTML += '<div class="chat-msg user">' + msg + '</div>';
+  msgs.innerHTML += '<div class="chat-msg bot" id="chatLoading" style="opacity:.6;font-style:italic">⏳ Digitando...</div>';
+  msgs.scrollTop = msgs.scrollHeight;
+  chatHistory.push({role:'user', content:msg});
+  var sys = 'Voce e um assistente virtual da Cantina Virtual do Colegio Estadual Prof. Mario Brandao Teixeira Braga (C.E Mario Braga). Cardapio: Coxinha R$6,00, Pastel R$7,50, Pao de Queijo R$4,00, Espetinho R$5,50, Croquete R$5,00, Enroladinho R$4,50, Suco Gaseificado R$6,50, Suco Natural R$7,00, Agua Mineral R$3,00, Achocolatado R$4,00, Refrigerante R$5,00, Vitamina R$7,50, Bala R$0,15, Biscoito R$1,50, Iogurte R$4,50, Brigadeiro R$2,50, Chiclete R$0,50, Salgadinho R$3,50, Amendoim R$2,00, Barra de Cereal R$3,00. O sistema usa creditos pre-carregados. Pedidos ficam pendentes ate confirmacao do coordenador. Responda em portugues de forma amigavel e objetiva.';
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1000, system:sys, messages:chatHistory})
+    });
+    var data = await res.json();
+    var reply = (data.content && data.content[0] && data.content[0].text) ? data.content[0].text : 'Desculpe, nao consegui processar sua mensagem.';
+    chatHistory.push({role:'assistant', content:reply});
+    var loadEl = document.getElementById('chatLoading');
+    if (loadEl) loadEl.outerHTML = '<div class="chat-msg bot">' + reply.replace(/\n/g,'<br>') + '</div>';
+  } catch(e) {
+    var loadEl = document.getElementById('chatLoading');
+    if (loadEl) loadEl.outerHTML = '<div class="chat-msg bot" style="color:var(--danger)">Erro ao conectar com a IA. Verifique sua chave de API.</div>';
+  }
+  if (msgs) msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ══ REGISTRAR ══
+function buildRegistrar() {
+  var el = document.getElementById('pageRegistrar');
+  var turmas = ['6A','6B','6C','6D','7A','7B','7C','7D','8A','8B','8C','8D','9A','9B','9C','9D'];
+  var opts = '';
+  for (var i = 0; i < turmas.length; i++) opts += '<option value="' + turmas[i] + '">' + turmas[i] + '</option>';
+  var html = '<div class="page-title">➕ Registrar Novo Aluno</div>';
+  html += '<div class="page-sub">Preencha os dados para cadastrar o aluno no sistema</div>';
+  html += '<div class="card" style="max-width:640px"><div class="register-grid">';
+  html += '<div class="form-group"><label>Nome Completo</label><input type="text" id="reg-name" placeholder="Ex: Joao Pedro Silva"></div>';
+  html += '<div class="form-group"><label>Matricula (Login)</label><input type="text" id="reg-mat" placeholder="Ex: joao2025"></div>';
+  html += '<div class="form-group"><label>Senha</label><input type="password" id="reg-pass" placeholder="Minimo 4 caracteres"></div>';
+  html += '<div class="form-group"><label>Turma</label><select id="reg-turma"><option value="">Selecione...</option>' + opts + '</select></div>';
+  html += '<div class="form-group"><label>Nome do Responsavel</label><input type="text" id="reg-resp" placeholder="Ex: Maria Silva"></div>';
+  html += '<div class="form-group"><label>Creditos Iniciais (R$)</label><input type="number" id="reg-cred" step="0.01" min="0" placeholder="0.00" value="0"></div>';
+  html += '</div>';
+  html += '<div id="reg-alert" style="display:none" class="alert alert-error">Preencha todos os campos obrigatorios.</div>';
+  html += '<div id="reg-ok" style="display:none" class="alert alert-success">✅ Aluno cadastrado com sucesso!</div>';
+  html += '<button class="btn btn-green" style="margin-top:8px" onclick="registrarAluno()">➕ Cadastrar Aluno</button></div>';
+  el.innerHTML = html;
+}
+
+function registrarAluno() {
+  var name = document.getElementById('reg-name').value.trim();
+  var mat  = document.getElementById('reg-mat').value.trim();
+  var pass = document.getElementById('reg-pass').value.trim();
+  var turma = document.getElementById('reg-turma').value;
+  var resp = document.getElementById('reg-resp').value.trim();
+  var cred = parseFloat(document.getElementById('reg-cred').value) || 0;
+  var alertEl = document.getElementById('reg-alert');
+  var okEl = document.getElementById('reg-ok');
+  alertEl.style.display = 'none'; okEl.style.display = 'none';
+  if (!name || !mat || !pass || !turma) { alertEl.textContent = 'Preencha todos os campos obrigatorios.'; alertEl.style.display = 'flex'; return; }
+  for (var i = 0; i < USERS.length; i++) {
+    if (USERS[i].mat === mat) { alertEl.textContent = 'Matricula ja cadastrada!'; alertEl.style.display = 'flex'; return; }
+  }
+  var newId = 0;
+  for (var i = 0; i < USERS.length; i++) { if (USERS[i].id > newId) newId = USERS[i].id; }
+  newId++;
+  USERS.push({id:newId, name:name, mat:mat, senha:pass, turma:turma, resp:resp, role:'aluno', cred:cred});
+  if (cred > 0) { CREDIT_HIST[newId] = [{t:'add', v:cred, desc:'Credito inicial', date:new Date().toLocaleDateString('pt-BR')}]; }
+  okEl.style.display = 'flex';
+  showNotif('✅ Aluno ' + name + ' cadastrado!');
+  setTimeout(function(){ buildRegistrar(); }, 2500);
+}
+
+// ══ UTILS ══
+function userById(id) {
+  for (var i = 0; i < USERS.length; i++) { if (USERS[i].id === id) return USERS[i]; }
+  return null;
+}
+
+function openModal(html) {
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('mainModal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('mainModal').classList.remove('open'); }
+
+document.getElementById('mainModal').addEventListener('click', function(e){ if (e.target === e.currentTarget) closeModal(); });
+
+var notifTimer;
+function showNotif(msg, err) {
+  var n = document.getElementById('notif');
+  n.textContent = msg;
+  n.className = 'notif show' + (err ? ' error' : '');
+  clearTimeout(notifTimer);
+  notifTimer = setTimeout(function(){ n.classList.remove('show'); }, 3200);
+}
+</script>
+</body>
+</html>
